@@ -4,7 +4,7 @@
 
 ## Документы
 
-- [Практика к лекции 09: ручное API-тестирование, 8 кейсов и Postman](docs/api-testing/README.md).
+- [Практика к лекции 09: ручное API-тестирование с WireMock, 8 кейсов и Postman](docs/api-testing/README.md).
 
 - [Спецификация, API и sequence-диаграммы](docs/specification.md).
 - [Минимальный набор ручных тест-кейсов: подготовка, шаги и ожидаемые результаты](docs/test-cases.md).

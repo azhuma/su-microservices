@@ -2,7 +2,7 @@
   "info": {
     "name": "QA 09 — Currency API — ручная проверка",
     "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
-    "description": "8 запросов для ручной демонстрации. Запустите CurrencyApplication из IDE или mvn spring-boot:run. URL указан напрямую, окружение и JavaScript не нужны. Выполняйте запросы по одному через Send; ожидания указаны в описаниях. API-01…07 не требуют источника курсов; API-08 использует публичный источник или сегодняшний кеш."
+    "description": "8 запросов для ручной демонстрации с WireMock. Запустите WireMock на 9090, приложение с профилем demo на 8080 (инструкции в README.md). Прямые URL, без окружений и JavaScript. Нажимайте Send и сравнивайте ответы вручную. API-08: rate=500, convertedAmount=50000, rateDate=2026-01-01."
   },
   "item": [
     {
@@ -167,7 +167,7 @@
       }
     },
     {
-      "name": "API-08 — Конвертация по реальному курсу",
+      "name": "API-08 — Конвертация по курсу WireMock",
       "request": {
         "method": "POST",
         "header": [
@@ -177,7 +177,7 @@
           }
         ],
         "url": "http://localhost:8080/api/v1/conversions",
-        "description": "Отправьте запрос кнопкой Send и проверьте ответ вручную. Ожидается HTTP 200. from=USD, to=KZT, amount=100; rate>0, convertedAmount>0, обе даты заполнены; fetchedOn — сегодня в Asia/Almaty. Требуется доступный источник либо сегодняшний кеш.",
+        "description": "Профиль demo и запущенный WireMock обязательны. Отправьте запрос кнопкой Send. Ожидается HTTP 200, Content-Type: application/json; from=USD, to=KZT, amount=100, rate=500, convertedAmount=50000, rateDate=2026-01-01, fetchedOn — сегодня в Asia/Almaty. Курсы синтетические.",
         "body": {
           "mode": "raw",
           "raw": "{\n  \"from\": \"USD\",\n  \"to\": \"KZT\",\n  \"amount\": 100\n}",

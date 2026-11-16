@@ -1,0 +1,22 @@
+{
+  "request": {
+    "method": "GET",
+    "url": "/v6/latest/USD"
+  },
+  "response": {
+    "status": 200,
+    "headers": {
+      "Content-Type": "application/json"
+    },
+    "jsonBody": {
+      "result": "success",
+      "base_code": "USD",
+      "time_last_update_unix": 1767225600,
+      "rates": {
+        "USD": 1,
+        "KZT": 500,
+        "EUR": 0.8
+      }
+    }
+  }
+}
