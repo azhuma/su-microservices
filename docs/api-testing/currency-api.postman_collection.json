@@ -1,0 +1,193 @@
+{
+  "info": {
+    "name": "QA 09 — Currency API — ручная проверка",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "description": "8 запросов для ручной демонстрации. Запустите CurrencyApplication из IDE или mvn spring-boot:run. URL указан напрямую, окружение и JavaScript не нужны. Выполняйте запросы по одному через Send; ожидания указаны в описаниях. API-01…07 не требуют источника курсов; API-08 использует публичный источник или сегодняшний кеш."
+  },
+  "item": [
+    {
+      "name": "API-01 — Одинаковые валюты и округление",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "url": "http://localhost:8080/api/v1/conversions",
+        "description": "Отправьте запрос кнопкой Send и проверьте ответ вручную. Ожидается HTTP 200. from=USD, to=USD, amount=12.345, rate=1, convertedAmount=12.35; обе даты null.",
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"from\": \"USD\",\n  \"to\": \"USD\",\n  \"amount\": 12.345\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        }
+      }
+    },
+    {
+      "name": "API-02 — Регистр, пробелы и цифровой код",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "url": "http://localhost:8080/api/v1/conversions",
+        "description": "Отправьте запрос кнопкой Send и проверьте ответ вручную. Ожидается HTTP 200. from=USD, to=USD, rate=1, convertedAmount=12.35; обе даты null. Результат совпадает с API-01.",
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"from\": \" usd \",\n  \"to\": \"840\",\n  \"amount\": 12.345\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        }
+      }
+    },
+    {
+      "name": "API-03 — Нулевая сумма",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "url": "http://localhost:8080/api/v1/conversions",
+        "description": "Отправьте запрос кнопкой Send и проверьте ответ вручную. Ожидается HTTP 200. rate=1, convertedAmount=0; обе даты null. Ноль разрешён контрактом.",
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"from\": \"USD\",\n  \"to\": \"USD\",\n  \"amount\": 0\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        }
+      }
+    },
+    {
+      "name": "API-04 — Отсутствует обязательное поле",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "url": "http://localhost:8080/api/v1/conversions",
+        "description": "Отправьте запрос кнопкой Send и проверьте ответ вручную. Ожидается HTTP 400. Content-Type: application/problem+json; status=400, code=INVALID_REQUEST, непустой detail; convertedAmount отсутствует.",
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"from\": \"USD\",\n  \"to\": \"USD\"\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        }
+      }
+    },
+    {
+      "name": "API-05 — Отрицательная сумма",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "url": "http://localhost:8080/api/v1/conversions",
+        "description": "Отправьте запрос кнопкой Send и проверьте ответ вручную. Ожидается HTTP 400. Content-Type: application/problem+json; status=400, code=INVALID_REQUEST, непустой detail; convertedAmount отсутствует.",
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"from\": \"USD\",\n  \"to\": \"USD\",\n  \"amount\": -0.01\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        }
+      }
+    },
+    {
+      "name": "API-06 — Неизвестная валюта",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "url": "http://localhost:8080/api/v1/conversions",
+        "description": "Отправьте запрос кнопкой Send и проверьте ответ вручную. Ожидается HTTP 400. Content-Type: application/problem+json; status=400, code=INVALID_CURRENCY, непустой detail; convertedAmount отсутствует.",
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"from\": \"ZZZ\",\n  \"to\": \"USD\",\n  \"amount\": 1\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        }
+      }
+    },
+    {
+      "name": "API-07 — Повреждённый JSON",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "url": "http://localhost:8080/api/v1/conversions",
+        "description": "Отправьте запрос кнопкой Send и проверьте ответ вручную. Ожидается HTTP 400. Content-Type: application/problem+json; status=400, code=INVALID_REQUEST, непустой detail; convertedAmount отсутствует.",
+        "body": {
+          "mode": "raw",
+          "raw": "{\"from\":\"USD\",",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        }
+      }
+    },
+    {
+      "name": "API-08 — Конвертация по реальному курсу",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "url": "http://localhost:8080/api/v1/conversions",
+        "description": "Отправьте запрос кнопкой Send и проверьте ответ вручную. Ожидается HTTP 200. from=USD, to=KZT, amount=100; rate>0, convertedAmount>0, обе даты заполнены; fetchedOn — сегодня в Asia/Almaty. Требуется доступный источник либо сегодняшний кеш.",
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"from\": \"USD\",\n  \"to\": \"KZT\",\n  \"amount\": 100\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        }
+      }
+    }
+  ]
+}
