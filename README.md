@@ -31,6 +31,20 @@ java -jar target/currency-service-0.0.1-SNAPSHOT.jar
 
 Для ручных SQL-проверок доступна встроенная H2 Console: `http://localhost:8080/h2-console`. JDBC URL — `jdbc:h2:file:./data/currency`, пользователь — `sa`, пароль пустой. Дополнительные настройки запуска и отдельный сервер источника не нужны.
 
+### Запуск с PostgreSQL в Testcontainers
+
+Нужен запущенный Docker (например, Docker Desktop или Rancher Desktop с Docker API). Из корня проекта:
+
+```bash
+mvn spring-boot:test-run
+```
+
+Команда запускает `PostgresCurrencyApplication` из `src/test/java`: Testcontainers поднимает `postgres:17-alpine`, а Spring Boot автоматически передаёт приложению параметры подключения. При первом запуске нужен доступ к Docker Registry для загрузки образов. REST API доступен на `http://localhost:8080`, как и при обычном запуске. В IntelliJ IDEA можно запустить `main` класса `PostgresCurrencyApplication` напрямую.
+
+Профиль `postgres` включается этим классом автоматически и создаёт таблицу из `src/test/resources/schema-postgres.sql`. H2 Console отключена. Контейнер использует случайный свободный порт на хосте; вручную задавать `DB_URL`, `DB_USERNAME` и `DB_PASSWORD` не нужно. Для подключения SQL-клиента адрес и порт видны в логе Testcontainers (`jdbc:postgresql://.../currency`); база, пользователь и пароль — `currency`.
+
+Остановка приложения (`Ctrl+C`) останавливает контейнер. База временная: при следующем запуске создаётся новый контейнер с пустой БД. Данные файловой H2 не переносятся. Обычные `mvn spring-boot:run` и `java -jar ...` продолжают использовать H2. Testcontainers, драйвер PostgreSQL и настройки этого запуска имеют область `test` и не входят в итоговый JAR. Обычный `mvn test` не требует Docker.
+
 ```bash
 curl -sS -X POST http://localhost:8080/api/v1/conversions \
   -H 'Content-Type: application/json' \
@@ -70,7 +84,7 @@ curl -sS -X POST http://localhost:8080/api/v1/conversions \
 curl -i 'https://open.er-api.com/v6/latest/USD'
 ```
 
-URL другого источника можно задать только при совместимости с JSON ExchangeRate-API и базой USD. Для другого формата нужно реализовать `RatesProvider`. PostgreSQL в текущую сборку не включён.
+URL другого источника можно задать только при совместимости с JSON ExchangeRate-API и базой USD. Для другого формата нужно реализовать `RatesProvider`.
 
 ## Структура кода
 
